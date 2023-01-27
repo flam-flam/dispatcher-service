@@ -86,7 +86,7 @@ class RedditDispatcher:
                 data=json.dumps(data),
                 headers=self.headers
             ).raise_for_status()
-            self.logger.debug(f"Dispatched comment with ID={submission.id}")
+            self.logger.debug(f"Dispatched comment with ID={data.get('id')}")
         except Exception as e:
             self.logger.error(f"Failed to dispatch to {endpoint}, {e}")
             time.sleep(1) # wait for a bit to not flood the logs
