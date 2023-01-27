@@ -24,3 +24,12 @@ docker build -t dispatcher . && docker run -it --env-file .env -v $(pwd)/config.
 
 >Note: if you're running the code outside the docker container,
 >you need to set `CONFIG_PATH` environment variable to your `config.json` path.
+
+## Data output
+
+The code sends a POST request to endpoints in `config.json` with
+JSON payload, same for both comments and posts, e.g.:
+
+```json
+{'id': 'j643al2', 'created_utc': 1674835189.0}
+```
