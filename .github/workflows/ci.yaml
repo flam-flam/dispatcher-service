@@ -27,7 +27,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
-          DRY_RUN: true
           PRERELEASE: ${{ github.ref != 'refs/heads/main' }}
 
       - run: |
