@@ -10,9 +10,17 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/smc
+  IMAGE_NAME: ${{ github.repository_owner }}/dispatcher
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
   tag:
     runs-on: ubuntu-latest
     permissions: write-all
@@ -26,7 +34,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
-          CUSTOM_TAG: ${{ GitHub.event_name != 'pull_request' && '' || github.event.pull_request.title }}
 
   build:
     runs-on: ubuntu-latest
@@ -55,7 +62,7 @@ jobs:
     - uses: actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435 # v1.6.0
       id: latest_tag
 
-    - name: Build and push Docker image
+    - name: Build${{ GitHub.event_name != 'pull_request' && ' and push' || ''}} image tag ${{steps.latest_tag.outputs.tag}}
       uses: docker/build-push-action@v3
       with:
         context: .
@@ -63,5 +70,16 @@ jobs:
         push: ${{ GitHub.event_name != 'pull_request' }}
         labels: ${{ steps.meta.outputs.labels }}
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request' && steps.latest_tag.outputs.tag || github.event.pull_request.title }}
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request' && 'latest' || github.event.pull_request.title }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{steps.latest_tag.outputs.tag}}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: Build and push 'latest' tag
+      if: ${{ GitHub.event_name != 'pull_request' }}
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: ${{ GitHub.event_name != 'pull_request' }}
+        labels: ${{ steps.meta.outputs.labels }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
