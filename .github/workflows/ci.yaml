@@ -25,6 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
+          CUSTOM_TAG: ${{ GitHub.event_name != 'pull_request' && '' || github.event.pull_request.title }}
 
   build:
     runs-on: ubuntu-latest
