@@ -29,10 +29,6 @@ jobs:
           TAG_CONTEXT: branch
           PRERELEASE: ${{ github.ref != 'refs/heads/main' }}
 
-      - run: |
-          echo ${{steps.version_tag.outputs.tag}}
-          echo ${{steps.version_tag.outputs.new_tag}}
-
   build:
     needs:
       - version
@@ -82,9 +78,3 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-
-    - name: PR comment
-      uses: thollander/actions-comment-pull-request@v2
-      with:
-        message: |
-          New image version built: `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{steps.latest_tag.outputs.tag}}` :eyes:
