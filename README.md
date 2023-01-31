@@ -31,5 +31,5 @@ The code sends a POST request to endpoints in `config.json` with
 JSON payload, same for both comments and posts, e.g.:
 
 ```json
-{'id': 'j643al2', 'created_utc': 1674835189.0}
+{"id": "j643al2", "created_utc": 1674835189.0}
 ```
