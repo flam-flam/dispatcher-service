@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
           DRY_RUN: true
-          CUSTOM_TAG: ${{ github.ref == 'refs/heads/main' && '' || github.event.pull_request.title }}
+          PRERELEASE: ${{ github.ref != 'refs/heads/main' }}
 
       - run: |
           echo ${{steps.version_tag.outputs.tag}}
