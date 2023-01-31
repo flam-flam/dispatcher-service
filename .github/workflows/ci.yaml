@@ -21,7 +21,7 @@ jobs:
           fetch-depth: '0'
       - name: Version tag
         id: version_tag
-        uses: anothrNick/github-tag-action@5880022db5012b887c98604c7498b1cf537677cc # 1.49.0
+        uses: anothrNick/github-tag-action@1.49.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
