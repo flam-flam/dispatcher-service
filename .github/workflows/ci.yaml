@@ -33,6 +33,7 @@ jobs:
       - tag
     permissions:
       packages: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -56,24 +57,24 @@ jobs:
     - uses: actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435 # v1.6.0
       id: latest_tag
 
-    - name: Build${{ GitHub.event_name != 'pull_request' && ' and push' || ''}} image tag ${{steps.latest_tag.outputs.tag}}
+    - name: Build${{ github.ref == 'refs/heads/main' && ' and push' || ''}} image tag ${{steps.latest_tag.outputs.tag}}
       uses: docker/build-push-action@v3
       with:
         context: .
         platforms: linux/amd64,linux/arm64
-        push: ${{ GitHub.event_name != 'pull_request' }}
+        push: ${{ github.ref == 'refs/heads/main' }}
         labels: ${{ steps.meta.outputs.labels }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{steps.latest_tag.outputs.tag}}
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
     - name: Build and push 'latest' tag
-      if: ${{ GitHub.event_name != 'pull_request' }}
+      if: ${{ github.ref == 'refs/heads/main' }}
       uses: docker/build-push-action@v3
       with:
         context: .
         platforms: linux/amd64,linux/arm64
-        push: ${{ GitHub.event_name != 'pull_request' }}
+        push: ${{ github.ref == 'refs/heads/main' }}
         labels: ${{ steps.meta.outputs.labels }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
