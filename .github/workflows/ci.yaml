@@ -62,5 +62,5 @@ jobs:
         push: ${{ GitHub.event_name != 'pull_request' }}
         labels: ${{ steps.meta.outputs.labels }}
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request && steps.latest_tag.outputs.tag || github.event.pull_request.title }}
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request && 'latest' || github.event.pull_request.title }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request' && steps.latest_tag.outputs.tag || github.event.pull_request.title }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ GitHub.event_name != 'pull_request' && 'latest' || github.event.pull_request.title }}
