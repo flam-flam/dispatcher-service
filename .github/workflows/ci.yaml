@@ -28,15 +28,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_CONTEXT: branch
           DRY_RUN: true
-  
-  echo:
-    needs:
-      - version
-    runs-on: ubuntu-latest
-    steps:
+          CUSTOM_TAG: ${{ GitHub.event_name != 'pull_request' && '' || github.event.pull_request.title }}
+
       - run: |
-          echo ${{steps.latest_tag.outputs.tag}}
-          echo ${{steps.latest_tag.outputs.new_tag}}
+          echo ${{steps.version_tag.outputs.tag}}
+          echo ${{steps.version_tag.outputs.new_tag}}
 
   # build:
   #   needs:
