@@ -3,6 +3,9 @@
 Small service that streams reddit submissions and comments
 to respective endpoints
 
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/flam-flam/dispatcher-service/ci.yaml?label=CI&logo=Docker&style=for-the-badge)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/flam-flam/dispatcher-service?logo=Github&sort=semver&style=for-the-badge)
+
 ## Reddit credentials
 
 Create new integration credentials at https://www.reddit.com/prefs/apps
