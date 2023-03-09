@@ -6,6 +6,7 @@ import requests
 import time
 import asyncpraw
 import asyncio
+from datetime import datetime as dt
 
 from asyncpraw.models.reddit.submission import Submission
 from asyncpraw.models.reddit.comment import Comment
@@ -62,7 +63,7 @@ class RedditDispatcher:
                 continue
             await self._dispatch(self.submission_endpoint, dict(
                 id=submission.id,
-                created_utc=submission.created_utc
+                created_utc=str(dt.fromtimestamp(submission.created_utc))
             ))
 
     async def _stream_comments(self) -> None:
@@ -75,7 +76,7 @@ class RedditDispatcher:
                 continue
             await self._dispatch(self.comment_endpoint, dict(
                 id=comment.id,
-                created_utc=comment.created_utc
+                created_utc=str(dt.fromtimestamp(comment.created_utc))
             ))
 
     async def _dispatch(self, endpoint: str, data: dict) -> None:
@@ -89,4 +90,5 @@ class RedditDispatcher:
             self.logger.debug(f"Dispatched comment with ID={data.get('id')}")
         except Exception as e:
             self.logger.error(f"Failed to dispatch to {endpoint}, {e}")
+            self.logger.error(f"DATA: {json.dumps(data)} HEADERS: {self.headers}")
             time.sleep(1) # wait for a bit to not flood the logs
