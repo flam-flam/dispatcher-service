@@ -1,10 +1,11 @@
 FROM python:3.11-alpine
 
-RUN mkdir -p /src
-WORKDIR /src
+RUN addgroup -S appgroup \
+ && adduser -S appuser -G appgroup \
+ && mkdir -p /src \
+ && chown -R appuser:appgroup /src
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /src
+WORKDIR /src
 USER appuser
 
 COPY app /src/app
