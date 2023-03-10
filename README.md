@@ -8,13 +8,19 @@ to respective endpoints
 
 ## Reddit credentials
 
-Create new integration credentials at https://www.reddit.com/prefs/apps
+1. Create new integration credentials at https://www.reddit.com/prefs/apps
+    - name: `whatever_you_like_but_perhaps_flam-flam`
+    - web app: `select this option`
+    - description: `whatever you like, or nothing, it's not mandatory`
+    - about url: `https://flam-flam.github.io`
+    - redirect uri: `https://flam-flam.github.io`
+    - create app: `click this button`
 
-Set the credentials in `.env` file (DO NOT COMMIT IT PLEASE).
-```env
-REDDIT_CLIENT_ID=<value>
-REDDIT_CLIENT_SECRET=<value>
-```
+2. Create a new file called `.env` in the root of the repo with the following contents. It's in the `.gitignore` so will not be committed:
+    ```env
+    REDDIT_CLIENT_ID=<the string underneath "web app">
+    REDDIT_CLIENT_SECRET=<the string next to "secret">
+    ```
 
 ## Local dev / docker
 
