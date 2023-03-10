@@ -1,18 +1,15 @@
-FROM ubuntu:20.04
-
-RUN apt update && apt install -y python3.8 python3-pip
+FROM python:3.11-alpine
 
 RUN mkdir -p /src
 WORKDIR /src
 
-RUN useradd --create-home appuser
-RUN chown -R appuser:appuser /src
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /src
+USER appuser
 
 COPY app /src/app
 COPY requirements.txt /src
 
 RUN pip3 install -r requirements.txt
-
-USER appuser
 
 CMD ["python3", "-um", "app"]
