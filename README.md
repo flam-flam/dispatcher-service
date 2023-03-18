@@ -34,10 +34,15 @@ docker build -t dispatcher . && docker run -it --env-file .env -v $(pwd)/config.
 >Note: if you're running the code outside the docker container,
 >you need to set `CONFIG_PATH` environment variable to your `config.json` path.
 
+### Tests
+
+Install test dependencies with `pip install tests/requirements.txt`.
+Then run the tests with `pytest`.
+
 ## Data output
 
 The code sends a POST request to endpoints in `config.json` with
-JSON payload, same for both comments and posts, e.g.:
+JSON payload, same for both comments and submissions, e.g.:
 
 ```json
 {"id": "j643al2", "created_utc": "2023-03-10T13:12:18+00:00"}
