@@ -4,6 +4,9 @@
 build: ## Build the image with a dev tag
 	@docker build -t dispatcher:dev .
 
+run: build ## Run the dispatcher with the default config
+	@docker run -it --env-file .env -v `pwd`/config.json:/src/config.json dispatcher
+
 dependencies: ## Install pip depencencies
 	@echo "..... Installing depencencies"
 	@pip install -r tests/requirements.txt --quiet
