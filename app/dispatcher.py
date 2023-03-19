@@ -1,15 +1,10 @@
-import sys
 import json
-import socket
 import logging
 import requests
 import time
 import asyncpraw
 import asyncio
 from datetime import datetime as dt
-
-from asyncpraw.models.reddit.submission import Submission
-from asyncpraw.models.reddit.comment import Comment
 
 
 class RedditDispatcher:
@@ -22,11 +17,15 @@ class RedditDispatcher:
         self._setup_logging(kwargs.get("debug", False))
         api_config = kwargs.get("api_config", dict())
 
-        self.submission_endpoint = kwargs.get("submission_endpoint", "http://localhost:8080")
-        self.logger.info(f"Set submission endpoint to {self.submission_endpoint}")
+        self.submission_endpoint = \
+            kwargs.get("submission_endpoint", "http://localhost:8080")
+        self.logger.info(
+            f"Set submission endpoint to {self.submission_endpoint}")
 
-        self.comment_endpoint = kwargs.get("comment_endpoint", "http://localhost:8080")
-        self.logger.info(f"Set comment endpoint to {self.comment_endpoint}")
+        self.comment_endpoint = \
+            kwargs.get("comment_endpoint", "http://localhost:8080")
+        self.logger.info(
+            f"Set comment endpoint to {self.comment_endpoint}")
 
         self.subreddits = kwargs.get("subreddits", [])
         self.logger.info(f"Watching subreddits {self.subreddits}")
@@ -83,12 +82,13 @@ class RedditDispatcher:
         """POST a json data object to an endpoint
         """
         try:
-            response = requests.post(endpoint,
-                data=json.dumps(data),
-                headers=self.headers
-            ).raise_for_status()
+            requests.post(endpoint,
+                          data=json.dumps(data),
+                          headers=self.headers
+                          ).raise_for_status()
             self.logger.debug(f"Dispatched comment with ID={data.get('id')}")
         except Exception as e:
             self.logger.error(f"Failed to dispatch to {endpoint}, {e}")
-            self.logger.error(f"DATA: {json.dumps(data)} HEADERS: {self.headers}")
-            time.sleep(1) # wait for a bit to not flood the logs
+            self.logger.error(
+                f"DATA: {json.dumps(data)} HEADERS: {self.headers}")
+            time.sleep(1)  # wait for a bit to not flood the logs

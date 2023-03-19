@@ -13,7 +13,7 @@ try:
     config["api_config"] = dict(
         client_id=os.environ.get("REDDIT_CLIENT_ID"),
         client_secret=os.environ.get("REDDIT_CLIENT_SECRET"),
-        user_agent=f"python:flam-flam-dispatcher-service (by /u/timberhilly)",
+        user_agent="python:flam-flam-dispatcher-service (by /u/timberhilly)",
         redirect_uri="http://flam-flam.github.io"
     )
 

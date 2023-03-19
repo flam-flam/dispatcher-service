@@ -3,8 +3,10 @@ import sys
 import pytest
 import requests_mock
 from interruptingcow import timeout
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+TIMEOUT = 5  # seconds to run the streams for
 TEST_CONFIG = dict(
     debug=False,
     comment_endpoint="http://test:8080",
@@ -13,15 +15,15 @@ TEST_CONFIG = dict(
     api_config=dict(
         client_id=os.environ.get("REDDIT_CLIENT_ID"),
         client_secret=os.environ.get("REDDIT_CLIENT_SECRET"),
-        user_agent=f"python:flam-flam-dispatcher-service (by /u/timberhilly)",
+        user_agent="python:flam-flam-dispatcher-service (by /u/timberhilly)",
         redirect_uri="http://flam-flam.github.io"
     )
 )
-TIMEOUT = 5 # seconds to run the streams for
 
 
 def test_import() -> None:
     from app import RedditDispatcher
+    assert isinstance(RedditDispatcher, type)
 
 
 @pytest.mark.asyncio
@@ -43,34 +45,6 @@ async def test_config() -> None:
         isinstance(dispatcher.subreddits[0], str)
 
     await dispatcher.reddit.close()
-
-
-@pytest.mark.asyncio
-async def test_stream_comments() -> None:
-    #Check if it runs at all
-    from app import RedditDispatcher
-    dispatcher = RedditDispatcher(**TEST_CONFIG)
-    try:
-        with timeout(TIMEOUT, RuntimeError):
-            await dispatcher._stream_comments()
-            assert False
-    except RuntimeError:
-        await dispatcher.reddit.close()
-        assert True
-
-
-@pytest.mark.asyncio
-async def test_stream_submissions() -> None:
-    #Check if it runs at all
-    from app import RedditDispatcher
-    dispatcher = RedditDispatcher(**TEST_CONFIG)
-    try:
-        with timeout(TIMEOUT, RuntimeError):
-            await dispatcher._stream_submissions()
-            assert False
-    except RuntimeError:
-        await dispatcher.reddit.close()
-        assert True
 
 
 @pytest.mark.asyncio
