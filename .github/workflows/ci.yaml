@@ -29,9 +29,28 @@ jobs:
           TAG_CONTEXT: branch
           PRERELEASE: ${{ github.ref != 'refs/heads/main' }}
 
+  test:
+    runs-on: ubuntu-latest
+    env:
+      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r tests/requirements.txt
+      - name: Run linter
+        run: flake8
+      - name: Run tests
+        run: pytest
+
   build:
     needs:
       - version
+      - test
     permissions:
       packages: write
       contents: read
