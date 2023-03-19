@@ -28,7 +28,13 @@ Build and run using the environment variables in `.env` file
 and `config.json`:
 
 ```sh
-docker build -t dispatcher . && docker run -it --env-file .env -v $(pwd)/config.json:/src/config.json dispatcher
+make build
+```
+
+Run the image with
+
+```sh
+make run
 ```
 
 >Note: if you're running the code outside the docker container,
@@ -36,8 +42,7 @@ docker build -t dispatcher . && docker run -it --env-file .env -v $(pwd)/config.
 
 ### Tests
 
-Install test dependencies with `pip install tests/requirements.txt`.
-Then run the tests with `pytest`.
+Run the tests with `make test`.
 
 ## Data output
 
