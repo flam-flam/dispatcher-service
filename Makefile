@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
-
+include .env
+export
 
 build: ## Build the image with a dev tag
 	@docker build -t dispatcher:dev .
@@ -13,11 +14,11 @@ dependencies: ## Install pip depencencies
 
 lint: dependencies ## Fun flake8 linter
 	@echo "..... Linting"
-	@flake8
+	@python -m flake8
 
 test: lint ## Run pytest
 	@echo "..... Running tests"
-	@pytest
+	@python -m pytest
 
 
 .PHONY: help
