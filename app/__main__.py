@@ -1,6 +1,8 @@
 import os
 import json
 import logging
+from pythonjsonlogger import jsonlogger
+
 from .dispatcher import RedditDispatcher
 
 logger = logging.getLogger("__main__")
@@ -19,4 +21,6 @@ try:
 
     RedditDispatcher(**config).start()
 except Exception as e:
-    logger.error(e)
+    logger.error("Unhandled error occured", extra=dict(
+                level="FATAL",
+                error=str(e)))
