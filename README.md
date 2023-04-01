@@ -4,7 +4,7 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/flam-flam/dispatcher-service?logo=Github&sort=semver&style=for-the-badge)
 
 Small service that streams reddit submissions and comments
-to respective endpoints
+to respective endpoints.
 
 ## Reddit credentials
 
@@ -23,6 +23,8 @@ to respective endpoints
     ```
 
 ## Local dev / docker
+
+Requires python>=3.7 or docker.
 
 Build and run using the environment variables in `.env` file
 and `config.json`:
