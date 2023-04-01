@@ -3,9 +3,7 @@ import sys
 import pytest
 import requests_mock
 from interruptingcow import timeout
-
 from asyncpraw_mock import Reddit
-
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 

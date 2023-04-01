@@ -37,6 +37,10 @@ Run the image with
 make run
 ```
 
+>Note: there are issues with running this on Windows
+>(see [this PR discussion](https://github.com/flam-flam/dispatcher-service/pull/17#issuecomment-1481356643)),
+>but it should be okay running in the docker container.
+
 >Note: if you're running the code outside the docker container,
 >you need to set `CONFIG_PATH` environment variable to your `config.json` path.
 
