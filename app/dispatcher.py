@@ -2,7 +2,6 @@ import json
 import logging
 import requests
 import time
-import asyncpraw
 import asyncio
 from datetime import datetime as dt
 
@@ -13,24 +12,23 @@ class RedditDispatcher:
     sends it to the consumer endpoints.
     """
 
-    def __init__(self, **kwargs):
-        self._setup_logging(kwargs.get("debug", False))
-        api_config = kwargs.get("api_config", dict())
+    def __init__(self, reddit, config):
+        self.reddit = reddit
+        self._setup_logging(config.get("config", False))
 
         self.submission_endpoint = \
-            kwargs.get("submission_endpoint", "http://localhost:8080")
+            config.get("submission_endpoint", "http://localhost:8080")
         self.logger.info(
             f"Set submission endpoint to {self.submission_endpoint}")
 
         self.comment_endpoint = \
-            kwargs.get("comment_endpoint", "http://localhost:8080")
+            config.get("comment_endpoint", "http://localhost:8080")
         self.logger.info(
             f"Set comment endpoint to {self.comment_endpoint}")
 
-        self.subreddits = kwargs.get("subreddits", [])
+        self.subreddits = config.get("subreddits", [])
         self.logger.info(f"Watching subreddits {self.subreddits}")
 
-        self.reddit = asyncpraw.Reddit(**api_config)
         self.headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
