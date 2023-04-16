@@ -24,7 +24,7 @@ to respective endpoints.
 
 ## Local dev / docker
 
-Requires python>=3.7 or docker.
+Requires python>=3.9 or docker.
 
 Build and run using the environment variables in `.env` file
 and `config.json`:
