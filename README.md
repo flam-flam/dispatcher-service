@@ -4,7 +4,7 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/flam-flam/dispatcher-service?logo=Github&sort=semver&style=for-the-badge)
 
 Small service that streams reddit submissions and comments
-to respective endpoints
+to respective endpoints.
 
 ## Reddit credentials
 
@@ -24,20 +24,36 @@ to respective endpoints
 
 ## Local dev / docker
 
+Requires python>=3.9 or docker.
+
 Build and run using the environment variables in `.env` file
 and `config.json`:
 
 ```sh
-docker build -t dispatcher . && docker run -it --env-file .env -v $(pwd)/config.json:/src/config.json dispatcher
+make build
 ```
+
+Run the image with
+
+```sh
+make run
+```
+
+>Note: there are issues with running this on Windows
+>(see [this PR discussion](https://github.com/flam-flam/dispatcher-service/pull/17#issuecomment-1481356643)),
+>but it should be okay running in the docker container.
 
 >Note: if you're running the code outside the docker container,
 >you need to set `CONFIG_PATH` environment variable to your `config.json` path.
 
+### Tests
+
+Run the tests with `make test`.
+
 ## Data output
 
 The code sends a POST request to endpoints in `config.json` with
-JSON payload, same for both comments and posts, e.g.:
+JSON payload, same for both comments and submissions, e.g.:
 
 ```json
 {"id": "j643al2", "created_utc": "2023-03-10T13:12:18+00:00"}
