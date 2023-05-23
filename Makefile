@@ -18,7 +18,7 @@ lint: dependencies ## Fun flake8 linter
 
 test: dependencies ## Run pytest
 	@echo "..... Running tests"
-	@python -m pytest && $(MAKE) lint
+	@python -m pytest && $(MAKE) -s lint
 
 
 .PHONY: help
