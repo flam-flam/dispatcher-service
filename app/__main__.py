@@ -1,14 +1,15 @@
 import os
 import json
-import logging
 import asyncpraw
 
 from .dispatcher import RedditDispatcher
+from .logging import Logger
 
-logger = logging.getLogger("__main__")
+logger = Logger.instance()
 
 try:
     config_path = os.environ.get("CONFIG_PATH", "/src/config.json")
+    logger.info(f"Reading config from {config_path}")
     with open(config_path, "r") as config_file:
         config = json.load(config_file)
 

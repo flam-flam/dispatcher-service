@@ -3,9 +3,9 @@ import requests
 import time
 import asyncio
 import asyncpraw
-import logging
-from pythonjsonlogger import jsonlogger
 from datetime import datetime
+
+from .logging import Logger
 
 
 class RedditDispatcher:
@@ -16,7 +16,7 @@ class RedditDispatcher:
 
     def __init__(self, reddit, config):
         self.reddit = reddit
-        self._setup_logging(config.get("config", False))
+        self.logger = Logger.instance()
 
         self.submission_endpoint = \
             config.get("submission_endpoint", "http://localhost:8080")
@@ -37,23 +37,13 @@ class RedditDispatcher:
             'Accept': 'application/json'
         }
 
-    def _setup_logging(self, debug=False):
-        """Set up the logger object
-        """
-        self.logger = logging.getLogger("dispatcher")
-        logHandler = logging.StreamHandler()
-        logHandler.setFormatter(jsonlogger.JsonFormatter())
-        self.logger.addHandler(logHandler)
-        self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
-        self.logger.debug("Running with debug ON", extra=dict(level="DEBUG"))
-
     def start(self) -> None:
         """Starts streaming reddit activity and sending it to the bots.
         """
         loop = asyncio.get_event_loop()
         loop.create_task(self._stream_comments())
         loop.create_task(self._stream_submissions())
-        self.logger.info("Started reddit dispatcher", extra=dict(level="INFO"))
+        self.logger.info("Started reddit dispatcher", level="INFO")
         loop.run_forever()
 
     async def _get_subreddit(self) -> "asyncpraw.models.Subreddit":
