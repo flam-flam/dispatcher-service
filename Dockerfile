@@ -8,9 +8,9 @@ RUN addgroup -S appgroup \
 WORKDIR /src
 USER appuser
 
-COPY app /src/app
 COPY requirements.txt /src
-
 RUN pip3 install -r requirements.txt
+
+COPY app /src/app
 
 CMD ["python3", "-um", "app"]
