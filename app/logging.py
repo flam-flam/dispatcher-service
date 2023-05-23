@@ -2,6 +2,7 @@ import structlog
 import logging
 from .config import Config
 
+
 class Logger(object):
     def __new__(cls):
         if not hasattr(cls, 'instance'):

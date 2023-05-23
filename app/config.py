@@ -2,6 +2,7 @@ import os
 import json
 from typing import Any
 
+
 class Config:
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -12,4 +13,6 @@ class Config:
         return cls.instance
 
     def __getattr__(self, name: str) -> Any:
+        if name == "config_json":
+            return self.instance.config_json
         return self.instance.config_json.get(name, None)

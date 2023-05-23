@@ -78,7 +78,7 @@ class RedditDispatcher:
                           headers=self.headers
                           ).raise_for_status()
         except Exception as e:
-            self.logger.exception(f"Failed to dispatch",
+            self.logger.exception("Failed to dispatch",
                                   endpoint=endpoint,
                                   error=e)
             time.sleep(5)  # wait for a bit to not flood the logs
