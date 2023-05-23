@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from pythonjsonlogger import jsonlogger
+import asyncpraw
 
 from .dispatcher import RedditDispatcher
 
@@ -12,14 +12,14 @@ try:
     with open(config_path, "r") as config_file:
         config = json.load(config_file)
 
-    config["api_config"] = dict(
+    reddit_instance = asyncpraw.Reddit(
         client_id=os.environ.get("REDDIT_CLIENT_ID"),
         client_secret=os.environ.get("REDDIT_CLIENT_SECRET"),
-        user_agent=f"python:flam-flam-dispatcher-service (by /u/timberhilly)",
+        user_agent="python:flam-flam-dispatcher-service (by /u/timberhilly)",
         redirect_uri="http://flam-flam.github.io"
     )
 
-    RedditDispatcher(**config).start()
+    RedditDispatcher(reddit_instance, config).start()
 except Exception as e:
     logger.error("Unhandled error occured", extra=dict(
                 level="FATAL",
