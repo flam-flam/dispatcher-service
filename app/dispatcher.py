@@ -1,10 +1,11 @@
 import json
-import logging
 import requests
 import time
 import asyncio
 import asyncpraw
 from datetime import datetime
+
+from .logging import Logger
 
 
 class RedditDispatcher:
@@ -15,33 +16,13 @@ class RedditDispatcher:
 
     def __init__(self, reddit, config):
         self.reddit = reddit
-        self._setup_logging(config.get("config", False))
-
-        self.submission_endpoint = \
-            config.get("submission_endpoint", "http://localhost:8080")
-        self.logger.info(
-            f"Set submission endpoint to {self.submission_endpoint}")
-
-        self.comment_endpoint = \
-            config.get("comment_endpoint", "http://localhost:8080")
-        self.logger.info(
-            f"Set comment endpoint to {self.comment_endpoint}")
-
+        self.config = config
+        self.logger = Logger()
         self._subreddit_object = None
-        self.subreddits = config.get("subreddits", [])
-        self.logger.info(f"Watching subreddits {self.subreddits}")
-
         self.headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
-
-    def _setup_logging(self, debug=False):
-        """Set up the logger object
-        """
-        self.logger = logging.getLogger("dispatcher")
-        self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
-        self.logger.debug("Running with debug ON")
 
     def start(self) -> None:
         """Starts streaming reddit activity and sending it to the bots.
@@ -56,7 +37,7 @@ class RedditDispatcher:
         """Get the asyncpraw.models.Subreddit object.
         Only the first call will fetch data from Reddit API.
         """
-        subreddit_string = "+".join(self.subreddits)
+        subreddit_string = "+".join(self.config.subreddits)
         if self._subreddit_object is None:
             self.logger.info(
                 f"Getting the subreddit object: {subreddit_string}")
@@ -71,7 +52,7 @@ class RedditDispatcher:
         async for submission in subreddit.stream.submissions(pause_after=-1):
             if submission is None:
                 continue
-            await self._dispatch(self.submission_endpoint, dict(
+            await self._dispatch(self.config.submission_endpoint, dict(
                 id=submission.id,
                 created_utc=str(datetime.fromtimestamp(submission.created_utc))
             ))
@@ -83,7 +64,7 @@ class RedditDispatcher:
         async for comment in subreddit.stream.comments(pause_after=-1):
             if comment is None:
                 continue
-            await self._dispatch(self.comment_endpoint, dict(
+            await self._dispatch(self.config.comment_endpoint, dict(
                 id=comment.id,
                 created_utc=str(datetime.fromtimestamp(comment.created_utc))
             ))
@@ -96,9 +77,8 @@ class RedditDispatcher:
                           data=json.dumps(data),
                           headers=self.headers
                           ).raise_for_status()
-            self.logger.debug(f"Dispatched comment with ID={data.get('id')}")
         except Exception as e:
-            self.logger.error(f"Failed to dispatch to {endpoint}, {e}")
-            self.logger.error(
-                f"DATA: {json.dumps(data)} HEADERS: {self.headers}")
-            time.sleep(1)  # wait for a bit to not flood the logs
+            self.logger.exception("Failed to dispatch",
+                                  endpoint=endpoint,
+                                  error=e)
+            time.sleep(5)  # wait for a bit to not flood the logs

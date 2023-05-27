@@ -3,17 +3,14 @@ import sys
 import pytest
 import requests_mock
 from unittest.mock import AsyncMock, MagicMock
+from app import Config
 from .helpers import SubredditStream
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 TIMEOUT = 1  # seconds to run the streams for
-TEST_CONFIG = dict(
-    debug=False,
-    comment_endpoint="http://comment",
-    submission_endpoint="http://submission",
-    subreddits=["test"],
-)
+os.environ["CONFIG_PATH"] = "tests/test_config.json"
+TEST_CONFIG = Config()
 API_CONFIG = dict(
     client_id=os.environ.get("REDDIT_CLIENT_ID"),
     client_secret=os.environ.get("REDDIT_CLIENT_SECRET"),
@@ -48,17 +45,17 @@ async def test_config(reddit_mock) -> None:
     from app import RedditDispatcher
     dispatcher = RedditDispatcher(reddit_mock, TEST_CONFIG)
 
-    assert isinstance(dispatcher.comment_endpoint, str) and \
-        dispatcher.comment_endpoint == \
-        TEST_CONFIG.get("comment_endpoint")
+    assert isinstance(dispatcher.config.comment_endpoint, str) and \
+        dispatcher.config.comment_endpoint == \
+        TEST_CONFIG.comment_endpoint
 
-    assert isinstance(dispatcher.submission_endpoint, str) and \
-        dispatcher.submission_endpoint == \
-        TEST_CONFIG.get("submission_endpoint")
+    assert isinstance(dispatcher.config.submission_endpoint, str) and \
+        dispatcher.config.submission_endpoint == \
+        TEST_CONFIG.submission_endpoint
 
-    assert isinstance(dispatcher.subreddits, list) and \
-        len(dispatcher.subreddits) == len(TEST_CONFIG.get("subreddits")) and \
-        dispatcher.subreddits.sort() == TEST_CONFIG.get("subreddits").sort()
+    assert isinstance(dispatcher.config.subreddits, list) and \
+        len(dispatcher.config.subreddits) == len(TEST_CONFIG.subreddits) and \
+        dispatcher.config.subreddits.sort() == TEST_CONFIG.subreddits.sort()
 
     await dispatcher.reddit.close()
 
@@ -70,7 +67,7 @@ async def test_get_subreddit(reddit_mock) -> None:
     subreddit = await dispatcher._get_subreddit()
     assert subreddit is not None
     dispatcher.reddit.subreddit.assert_called_with(
-        "+".join(TEST_CONFIG.get("subreddits"))
+        "+".join(TEST_CONFIG.subreddits)
     )
     await dispatcher.reddit.close()
 
@@ -82,7 +79,7 @@ async def test_dispatch_comments(reddit_mock) -> None:
 
     with requests_mock.mock() as endpoint:
         # Create a mock API endpoint
-        endpoint.register_uri("POST", TEST_CONFIG["comment_endpoint"])
+        endpoint.register_uri("POST", TEST_CONFIG.comment_endpoint)
         # Replace the subreddit stream with a proper mock
         await dispatcher._get_subreddit()
         dispatcher._subreddit_object.stream = SubredditStream()
@@ -116,7 +113,7 @@ async def test_dispatch_submissions(reddit_mock) -> None:
 
     with requests_mock.mock() as endpoint:
         # Create a mock API endpoint
-        endpoint.register_uri("POST", TEST_CONFIG["submission_endpoint"])
+        endpoint.register_uri("POST", TEST_CONFIG.submission_endpoint)
         # Replace the subreddit stream with a proper mock
         await dispatcher._get_subreddit()
         dispatcher._subreddit_object.stream = SubredditStream()

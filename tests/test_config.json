@@ -1,0 +1,8 @@
+{
+    "debug": false,
+    "comment_endpoint": "http://comment",
+    "submission_endpoint": "http://submission",
+    "subreddits": [
+        "test"
+    ]
+}

@@ -6,7 +6,7 @@ build: ## Build the image with a dev tag
 	@docker build -t dispatcher:dev .
 
 run: build ## Run the dispatcher with the default config
-	@docker run -it --env-file .env -v `pwd`/config.json:/src/config.json dispatcher
+	@docker run -it --env-file .env -v `pwd`/config.json:/src/config.json dispatcher:dev
 
 dependencies: ## Install pip depencencies
 	@echo "..... Installing depencencies"
@@ -18,7 +18,7 @@ lint: dependencies ## Fun flake8 linter
 
 test: dependencies ## Run pytest
 	@echo "..... Running tests"
-	@python -m pytest && $(MAKE) lint
+	@python -m pytest && $(MAKE) -s lint
 
 
 .PHONY: help
