@@ -6,7 +6,7 @@ RUN addgroup -S appgroup \
  && chown -R appuser:appgroup /src
 
 WORKDIR /src
-USER appuser
+# USER appuser
 
 COPY requirements.txt /src
 RUN pip3 install -r requirements.txt
