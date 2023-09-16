@@ -28,10 +28,18 @@ class RedditDispatcher:
         """Starts streaming reddit activity and sending it to the bots.
         """
         loop = asyncio.get_event_loop()
+        loop.set_exception_handler(self._exception_handler)
         loop.create_task(self._stream_comments())
         loop.create_task(self._stream_submissions())
         self.logger.info("Started reddit dispatcher")
         loop.run_forever()
+
+    def _exception_handler(self, loop, context) -> None:
+        """Custom exception handler for the event loop.
+        """
+        loop.default_exception_handler(context)
+        loop.stop() # kill all tasks
+        raise context.get('exception')
 
     async def _get_subreddit(self) -> "asyncpraw.models.Subreddit":
         """Get the asyncpraw.models.Subreddit object.
