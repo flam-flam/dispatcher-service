@@ -38,7 +38,7 @@ class RedditDispatcher:
         """Custom exception handler for the event loop.
         """
         loop.default_exception_handler(context)
-        loop.stop() # kill all tasks
+        loop.stop()  # kill all tasks
         raise context.get('exception')
 
     async def _get_subreddit(self) -> "asyncpraw.models.Subreddit":
