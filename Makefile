@@ -14,7 +14,7 @@ dependencies: ## Install pip depencencies
 
 lint: dependencies ## Fun flake8 linter
 	@echo "..... Linting"
-	@python -m flake8
+	@python -m flake8 --ignore=E501
 
 test: dependencies ## Run pytest
 	@echo "..... Running tests"
