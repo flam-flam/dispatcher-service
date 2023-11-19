@@ -62,7 +62,13 @@ class RedditDispatcher:
                 continue
             await self._dispatch(self.config.submission_endpoint, dict(
                 id=submission.id,
-                created_utc=str(datetime.fromtimestamp(submission.created_utc))
+                created_utc=str(datetime.fromtimestamp(submission.created_utc)),
+                author=submission.author.name,
+                title=submission.title,
+                selftext=submission.selftext,
+                score=int(submission.score),
+                upvote_ratio=int(submission.upvote_ratio),
+                comment_count=int(submission.comments.__len__())
             ))
 
     async def _stream_comments(self) -> None:
@@ -81,12 +87,17 @@ class RedditDispatcher:
         """POST a json data object to an endpoint
         """
         try:
-            requests.post(endpoint,
-                          data=json.dumps(data),
-                          headers=self.headers
-                          ).raise_for_status()
+            if len(str(data.get('selftext'))) < 1:
+                return
+            requests.post(
+                endpoint,
+                data=json.dumps(data),
+                headers=self.headers
+            ).raise_for_status()
         except Exception as e:
-            self.logger.exception("Failed to dispatch",
-                                  endpoint=endpoint,
-                                  error=e)
+            self.logger.exception(
+                f"Failed to dispatch: {data}",
+                endpoint=endpoint,
+                error=e
+            )
             time.sleep(5)  # wait for a bit to not flood the logs

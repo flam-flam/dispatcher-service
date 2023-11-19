@@ -4,16 +4,26 @@ from unittest.mock import AsyncMock
 
 class SubredditStream(AsyncMock):
     fake_comments = [
-        type('Comment', (object,), dict(
+        type(
+            'Comment', (object,),
+            dict(
                 id=f"abcde{i}",
-                created_utc=i+1681654036
+                created_utc=i + 1681654036
             ))
         for i in range(3)
     ]
     fake_submissions = [
-        type('Submission', (object,), dict(
+        type(
+            'Submission', (object,),
+            dict(
                 id=f"abcde{i}",
-                created_utc=i+1681654036
+                created_utc=i + 1681654036,
+                author="coolUser88",  # test is failing on this field and I don't know why
+                title="Woah, check this out!",
+                selftext="beep boop, I am a submission",
+                score=0,
+                upvote_ratio=0,
+                comment_count=0
             ))
         for i in range(3)
     ]
