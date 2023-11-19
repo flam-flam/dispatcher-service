@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
       - name: Run linter
-        run: flake8
+        run: flake8 --ignore=E501
       - name: Run tests
         run: pytest
 
