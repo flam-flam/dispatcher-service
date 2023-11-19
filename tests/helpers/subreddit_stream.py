@@ -18,7 +18,7 @@ class SubredditStream(AsyncMock):
             dict(
                 id=f"abcde{i}",
                 created_utc=i + 1681654036,
-                author="coolUser88", # test is failing on this field and I don't know why
+                author="coolUser88",  # test is failing on this field and I don't know why
                 title="Woah, check this out!",
                 selftext="beep boop, I am a submission",
                 score=0,
